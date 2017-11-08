@@ -1,1 +1,34 @@
-inherit_from: .rubocop_todo.yml
+AllCops:
+  Exclude:
+    # Generated files.
+    - lib/datadog/**/*
+
+# Offense count: 2
+Metrics/AbcSize:
+  Max: 150
+
+# Offense count: 2
+# Configuration parameters: CountComments.
+Metrics/ClassLength:
+  Max: 1300
+Metrics/ModuleLength:
+  Max: 1500
+
+# Offense count: 3
+Metrics/CyclomaticComplexity:
+  Max: 50
+
+# Offense count: 5
+# Configuration parameters: CountComments.
+Metrics/MethodLength:
+  Max: 200
+
+# Offense count: 3
+Metrics/PerceivedComplexity:
+  Max: 50
+
+ClassAndModuleChildren:
+  Enabled: false
+
+NumericLiterals:
+  MinDigits: 6
