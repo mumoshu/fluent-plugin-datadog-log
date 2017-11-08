@@ -1,0 +1,43 @@
+#!/usr/bin/env rake
+
+require 'bundler'
+Bundler::GemHelper.install_tasks
+
+require 'rake/testtask'
+require 'rubocop/rake_task'
+
+desc 'Run Rubocop to check for style violations'
+RuboCop::RakeTask.new
+
+desc 'Run unit tests'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.test_files = FileList['test/plugin/*.rb']
+  test.verbose = true
+end
+
+# Building the gem will use the local file mode, so ensure it's world-readable.
+# @see https://github.com/GoogleCloudPlatform/fluent-plugin-google-cloud/issues/53
+desc 'Fix file permissions'
+task :fix_perms do
+  files = [
+    'lib/fluent/plugin/out_datadog.rb',
+    'lib/fluent/plugin/monitoring.rb',
+    'lib/datadog/**/*.rb'
+  ].flat_map do |file|
+    file.include?('*') ? Dir.glob(file) : [file]
+  end
+
+  files.each do |file|
+    mode = File.stat(file).mode & 0777
+    next unless mode & 0444 != 0444
+    puts "Changing mode of #{file} from #{mode.to_s(8)} to "\
+         "#{(mode | 0444).to_s(8)}"
+    chmod mode | 0444, file
+  end
+end
+
+desc 'Run unit tests and RuboCop to check for style violations'
+task all: [:rubocop, :test, :fix_perms]
+
+task default: :all
