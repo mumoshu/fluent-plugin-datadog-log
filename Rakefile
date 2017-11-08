@@ -21,7 +21,7 @@ end
 desc 'Fix file permissions'
 task :fix_perms do
   files = [
-    'lib/fluent/plugin/out_datadog.rb',
+    'lib/fluent/plugin/out_datadog_log.rb',
     'lib/fluent/plugin/monitoring.rb',
     'lib/datadog/**/*.rb'
   ].flat_map do |file|

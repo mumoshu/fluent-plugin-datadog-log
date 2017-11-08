@@ -1,12 +1,12 @@
 Gem::Specification.new do |gem|
-  gem.name          = 'fluent-plugin-datadog'
+  gem.name          = 'fluent-plugin-datadog-log'
   gem.description   = <<-eos
    Fluentd output plugin for the Datadog Log Intake API, which will make
    logs viewable in the Datadog's log viewer.
 eos
   gem.summary       = 'fluentd output plugin for the Datadog Log Intake API'
   gem.homepage      = \
-    'https://github.com/mumoshu/fluent-plugin-datadog'
+    'https://github.com/mumoshu/fluent-plugin-datadog-log'
   gem.license       = 'Apache-2.0'
   gem.version       = '0.1.0'
   gem.authors       = ['Yusuke KUOKA']

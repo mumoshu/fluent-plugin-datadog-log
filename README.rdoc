@@ -1,19 +1,19 @@
 = Datadog plugin for {fluentd}[http://github.com/fluent/fluentd]
 
-fluent-plugin-datadog is an
+fluent-plugin-datadog-log is an
 {output plugin for fluentd}[http://docs.fluentd.org/articles/output-plugin-overview]
 which sends logs to {Datadog}[https://www.datadoghq.com/].
 
-{<img src="https://badge.fury.io/rb/fluent-plugin-datadog.svg" alt="Gem Version" />}[http://badge.fury.io/rb/fluent-plugin-datadog]
-{<img src="https://secure.travis-ci.org/mumoshu/fluent-plugin-datadog.png" alt="Build Status" />}[https://travis-ci.org/mumoshu/fluent-plugin-datadog]
+{<img src="https://badge.fury.io/rb/fluent-plugin-datadog-log.svg" alt="Gem Version" />}[http://badge.fury.io/rb/fluent-plugin-datadog-log]
+{<img src="https://secure.travis-ci.org/mumoshu/fluent-plugin-datadog-log.png" alt="Build Status" />}[https://travis-ci.org/mumoshu/fluent-plugin-datadog-log]
 
 == Installation
 
 This gem is hosted at
-{RubyGems.org}[https://rubygems.org/gems/fluent-plugin-datadog]
+{RubyGems.org}[https://rubygems.org/gems/fluent-plugin-datadog-log]
 and can be installed using:
 
-    $ gem install fluent-plugin-datadog
+    $ gem install fluent-plugin-datadog-log
 
 {kube-fluentd}[https://github.com/mumoshu/kube-fluentd/] docker image would also include the gem.
 

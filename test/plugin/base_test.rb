@@ -28,7 +28,7 @@ module BaseTest
 
   def setup
     Fluent::Test.setup
-    require 'fluent/plugin/out_datadog'
+    require 'fluent/plugin/out_datadog_log'
     @logs_sent = []
   end
 

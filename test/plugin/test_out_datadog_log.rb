@@ -14,8 +14,8 @@
 
 require_relative 'base_test'
 
-# Unit tests for Datadog plugin
-class DatadogOutputTest < Test::Unit::TestCase
+# Unit tests for Datadog Log plugin
+class DatadogLogOutputTest < Test::Unit::TestCase
   include BaseTest
 
   def test_configure
@@ -23,7 +23,7 @@ class DatadogOutputTest < Test::Unit::TestCase
       setup_ec2_metadata_stubs
 
       d = create_driver(<<-EOC)
-        type datadog
+        type datadog_log
         api_key myapikey
         service myservice
         source mysource
@@ -43,7 +43,7 @@ class DatadogOutputTest < Test::Unit::TestCase
       t = DateTime.rfc3339(timestamp_str).to_time
       time = Fluent::EventTime.from_time(t)
       d = create_driver(<<-EOC)
-        type datadog
+        type datadog_log
         api_key myapikey
         service myservice
         source mysource
@@ -94,7 +94,7 @@ class DatadogOutputTest < Test::Unit::TestCase
         setup_prometheus
         (1..request_count).each do
           d = create_driver(<<-EOC)
-            type datadog
+            type datadog_log
             api_key myapikey
             service myservice
             source mysource

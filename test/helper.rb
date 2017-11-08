@@ -37,4 +37,4 @@ unless ENV.key?('VERBOSE')
   $log = nulllogger # rubocop:disable Style/GlobalVars
 end
 
-require 'fluent/plugin/out_datadog'
+require 'fluent/plugin/out_datadog_log'
