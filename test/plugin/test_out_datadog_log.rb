@@ -53,8 +53,10 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       EOC
       conn = StubConn.new
       fluentd_tag = 'mytag'
+      Net::TCPClient.stubs(:new)
+        .with(server: ':10516', ssl: true)
+        .returns(conn)
       d.run(default_tag: fluentd_tag) do
-        d.instance.instance_variable_set :@conn, conn
         record = {
           'log' => 'mymsg',
           'kubernetes' => {
@@ -103,6 +105,10 @@ class DatadogLogOutputTest < Test::Unit::TestCase
             log_level debug
             enable_monitoring true
           EOC
+          conn = StubConn.new
+          Net::TCPClient.stubs(:new)
+            .with(server: ':10516', ssl: true)
+            .returns(conn)
           d.run(default_tag: 'mytag') do
             (1..entry_count).each do |i|
               d.feed time, 'message' => log_entry(i.to_s)
