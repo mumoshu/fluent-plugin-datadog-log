@@ -37,6 +37,14 @@ of your fluentd configuration file, for example:
 
 Add `log_level debug` to enable debug logging which dumps every payload sent to Datadog.
 
+== Testing Datadog Connectivity within irb
+
+   cd path/to/fluent-plugin-datadog-log
+
+   bundle exec irb -r datadog/lib
+
+   c = Datadog::Log::Client.new(api_key:ENV['DD_LOG_API_KEY'],hostname:'myhost'); pl = c.send_payload(msg: 'foobar', source: 'myapp', source_category: 'stdout', service: 'irb', tags: %w|foo=bar|); puts pl
+
 == Copyright
 
 Copyright:: Copyright 2017 Yusuke KUOKA All rights reserved.

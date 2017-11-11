@@ -75,7 +75,7 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       assert_equal(1, d.logs.count { |l| l =~ /Sent payload to Datadog/ })
       assert_equal(1, conn.sent.size)
       # rubocop:disable LineLength
-      payload = 'myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myservice - - [dd ddsource="mysource"][dd ddsourcecategory="mysourcecategory"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n'
+      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myservice - - [dd ddsource="mysource"][dd ddsourcecategory="mysourcecategory"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
       # rubocop:enable LineLength
       assert_equal(payload, conn.sent.first)
     end

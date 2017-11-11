@@ -1,5 +1,7 @@
 require 'openssl'
 require 'net/tcp_client'
+require 'socket'
+require 'time'
 
 module Datadog
   module Log
@@ -59,7 +61,7 @@ module Datadog
     # @param [String] extra_content
     # @param [String] msg
     def create_payload(api_key_str:, msg:, extra_content:)
-      "#{api_key_str} #{extra_content} #{msg}\\n"
+      "#{api_key_str} #{extra_content} #{msg}\n"
     end
 
     class Client
@@ -78,7 +80,8 @@ module Datadog
       def send_payload(logset: 'main', msg:, datetime: nil, service:, source:, source_category:, tags:)
         datetime = DateTime.now if datetime.nil?
 
-        timestamp_str = datetime.rfc3339(6)
+        # new_offset(0) is required. otherwise datadog will silently throws away the log..
+        timestamp_str = datetime.new_offset(0).rfc3339(6)
         payload = create_payload(
           api_key_str: build_api_key_str(api_key: @api_key, logset: logset),
           msg: truncate_message(msg),
@@ -103,7 +106,7 @@ module Datadog
 
       class << self
         def from_env
-          new(api_key: ENV['DD_LOG_API_KEY'], hostname: ENV['HOSTNAME'])
+          new(api_key: ENV['DD_LOG_API_KEY'], hostname: Socket.gethostname)
         end
       end
 
