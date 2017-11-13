@@ -35,6 +35,31 @@ class DatadogLogOutputTest < Test::Unit::TestCase
     end
   end
 
+  def test_configure_with_env
+    new_stub_context do
+      setup_ec2_metadata_stubs
+
+      ENV.stubs(:[])
+        .with('DD_API_KEY')
+        .returns('myapikey_from_env')
+
+      ENV.stubs(:[])
+        .with(Not equals 'DD_API_KEY')
+        .returns('')
+        .times(3)
+
+      d = create_driver(<<-EOC)
+        type datadog_log
+        service myservice
+        source mysource
+      EOC
+
+      assert_equal 'myapikey_from_env', d.instance.api_key
+      assert_equal 'myservice', d.instance.service
+      assert_equal 'mysource', d.instance.source
+    end
+  end
+
   def test_write
     new_stub_context do
       setup_ec2_metadata_stubs

@@ -128,9 +128,9 @@ module Fluent::Plugin
       super
 
       if @api_key.size == 0
-        @api_key = ENV['DD_LOG_API_KEY']
+        @api_key = ENV['DD_API_KEY']
         if @api_key == '' || @api_key.nil?
-          error_message = 'Unable to obtain api_key from DD_LOG_API_KEY'
+          error_message = 'Unable to obtain api_key from DD_API_KEY'
           fail Fluent::ConfigError, error_message
         end
       end
