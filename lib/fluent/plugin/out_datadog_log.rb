@@ -280,7 +280,10 @@ module Fluent::Plugin
 
           tags.concat(@default_tags)
 
-          service = kube_labels['app'] || kube_labels['k8s-app'] unless kube_labels.nil?
+          unless kube_labels.nil?
+            service = kube_labels['app'] ||
+                      kube_labels['k8s-app']
+          end
           source = kube['pod_name']
           source_category = kube['container_name']
 
@@ -314,7 +317,6 @@ module Fluent::Plugin
           end
 
         rescue => error
-          raise error
           increment_failed_requests_count
           if entries_count.nil?
             increment_dropped_entries_count(1)
