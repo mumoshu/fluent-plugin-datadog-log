@@ -252,7 +252,23 @@ module Fluent::Plugin
           if kube.key? 'labels'
             labels = kube['labels']
             labels.each do |k, v|
-              tags << "kube_#{k}=#{v}"
+              k2 = k.dup
+              k2.gsub!(/[\,\.]/, '_')
+              k2.gsub!(%r{/}, '-')
+              tags << "kube_#{k2}=#{v}"
+            end
+          end
+
+          if kube.key? 'annotations'
+            annotations = kube['annotations']
+            created_by_str = annotations['kubernetes.io/created-by']
+            unless created_by_str.nil?
+              created_by = JSON.parse(created_by_str)
+              ref = created_by['reference'] unless created_by.nil?
+              kind = ref['kind'] unless ref.nil?
+              name = ref['name'] unless ref.nil?
+              kind = kind.downcase unless kind.nil?
+              tags << "kube_#{kind}=#{name}" if !kind.nil? && !name.nil?
             end
           end
 

@@ -84,12 +84,20 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       d.run(default_tag: fluentd_tag) do
         record = {
           'log' => 'mymsg',
+          'docker' => {
+            'container_id' => 'myfullcontainerid'
+          },
           'kubernetes' => {
             'namespace' => 'myns',
             'pod_name' => 'mypod',
             'container_name' => 'mycontainer',
             'labels' => {
               'k8s-app' => 'myapp'
+            },
+            'annotations' => {
+              # rubocop:disable LineLength
+              'kubernetes.io/created-by' => '{"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"Deployment","namespace":"default","name":"myapp","uid":"d67e8857-c2dc-11e7-aed9-066d23381f8c","apiVersion":"extensions","resourceVersion":"289"}}'
+              # rubocop:enable LineLength
             }
           }
         }
@@ -100,7 +108,7 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       assert_equal(1, d.logs.count { |l| l =~ /Sent payload to Datadog/ })
       assert_equal(1, conn.sent.size)
       # rubocop:disable LineLength
-      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myservice - - [dd ddsource="mysource"][dd ddsourcecategory="mysourcecategory"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
+      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myservice - - [dd ddsource="mysource"][dd ddsourcecategory="mysourcecategory"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,kube_deployment=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
       # rubocop:enable LineLength
       assert_equal(payload, conn.sent.first)
     end
