@@ -83,6 +83,44 @@ class DatadogLogOutputTest < Test::Unit::TestCase
         .returns(conn)
       d.run(default_tag: fluentd_tag) do
         record = {
+          'log' => 'mymsg'
+        }
+        d.feed(time, record)
+      end
+
+      # fail d.logs.inspect
+      assert_equal(1, d.logs.count { |l| l =~ /Sent payload to Datadog/ })
+      assert_equal(1, conn.sent.size)
+      # rubocop:disable LineLength
+      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myservice - - [dd ddsource="mysource"][dd ddsourcecategory="mysourcecategory"][dd ddtags="host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
+      # rubocop:enable LineLength
+      assert_equal(payload, conn.sent.first)
+    end
+  end
+
+  def test_write_kube
+    new_stub_context do
+      setup_ec2_metadata_stubs
+
+      timestamp_str = '2006-01-02T15:04:05.000000+00:00'
+      t = DateTime.rfc3339(timestamp_str).to_time
+      time = Fluent::EventTime.from_time(t)
+      d = create_driver(<<-EOC)
+        type datadog_log
+        api_key myapikey
+        service myservice
+        source mysource
+        source_category mysourcecategory
+        logset mylogset
+        log_level debug
+      EOC
+      conn = StubConn.new
+      fluentd_tag = 'mytag'
+      Net::TCPClient.stubs(:new)
+        .with(server: ':10516', ssl: true)
+        .returns(conn)
+      d.run(default_tag: fluentd_tag) do
+        record = {
           'log' => 'mymsg',
           'docker' => {
             'container_id' => 'myfullcontainerid'
@@ -108,7 +146,7 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       assert_equal(1, d.logs.count { |l| l =~ /Sent payload to Datadog/ })
       assert_equal(1, conn.sent.size)
       # rubocop:disable LineLength
-      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myservice - - [dd ddsource="mysource"][dd ddsourcecategory="mysourcecategory"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,kube_deployment=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
+      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myapp - - [dd ddsource="mypod"][dd ddsourcecategory="mycontainer"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,kube_deployment=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
       # rubocop:enable LineLength
       assert_equal(payload, conn.sent.first)
     end

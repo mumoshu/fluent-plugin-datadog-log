@@ -249,9 +249,9 @@ module Fluent::Plugin
             tags << "#{tag_key}=#{kube[json_key]}" if kube.key? json_key
           end
 
-          if kube.key? 'labels'
-            labels = kube['labels']
-            labels.each do |k, v|
+          kube_labels = kube['labels']
+          unless kube_labels.nil?
+            kube_labels.each do |k, v|
               k2 = k.dup
               k2.gsub!(/[\,\.]/, '_')
               k2.gsub!(%r{/}, '-')
@@ -280,6 +280,14 @@ module Fluent::Plugin
 
           tags.concat(@default_tags)
 
+          service = kube_labels['app'] || kube_labels['k8s-app'] unless kube_labels.nil?
+          source = kube['pod_name']
+          source_category = kube['container_name']
+
+          service = @service if service.nil?
+          source = @source if source.nil?
+          source_category = @source_category if source_category.nil?
+
           datetime = Time.at(Fluent::EventTime.new(time).to_r).utc.to_datetime
 
           payload =
@@ -287,9 +295,9 @@ module Fluent::Plugin
               logset: @logset,
               msg: msg,
               datetime: datetime,
-              service: @service,
-              source: @source,
-              source_category: @source_category,
+              service: service,
+              source: source,
+              source_category: source_category,
               tags: tags
             )
 
@@ -306,12 +314,19 @@ module Fluent::Plugin
           end
 
         rescue => error
-          increment_failed_requests_count
-          increment_retried_entries_count(entries_count)
-          # RPC cancelled, so retry via re-raising the error.
-          @log.debug "Retrying #{entries_count} log message(s) later.",
-                     error: error.to_s
           raise error
+          increment_failed_requests_count
+          if entries_count.nil?
+            increment_dropped_entries_count(1)
+            @log.error 'Not retrying a log message later',
+                       error: error.to_s
+          else
+            increment_retried_entries_count(entries_count)
+            # RPC cancelled, so retry via re-raising the error.
+            @log.debug "Retrying #{entries_count} log message(s) later.",
+                       error: error.to_s
+            raise error
+          end
         end
       end
     end
