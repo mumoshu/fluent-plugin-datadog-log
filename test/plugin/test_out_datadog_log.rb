@@ -113,6 +113,7 @@ class DatadogLogOutputTest < Test::Unit::TestCase
         source_category mysourcecategory
         logset mylogset
         log_level debug
+        tags ["kube_cluster=MyCluster", "mykey=myval"]
       EOC
       conn = StubConn.new
       fluentd_tag = 'mytag'
@@ -146,7 +147,7 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       assert_equal(1, d.logs.count { |l| l =~ /Sent payload to Datadog/ })
       assert_equal(1, conn.sent.size)
       # rubocop:disable LineLength
-      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myapp - - [dd ddsource="mypod"][dd ddsourcecategory="mycontainer"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,kube_deployment=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012"] mymsg\n)
+      payload = %(myapikey/mylogset <46>0 2006-01-02T15:04:05.000000+00:00 i-81c16767 myapp - - [dd ddsource="mypod"][dd ddsourcecategory="mycontainer"][dd ddtags="pod_name=mypod,container_name=mycontainer,kube_k8s-app=myapp,kube_deployment=myapp,host=i-81c16767,zone=aws:us-west-2b,aws_account_id=123456789012,kube_cluster=MyCluster,mykey=myval"] mymsg\n)
       # rubocop:enable LineLength
       assert_equal(payload, conn.sent.first)
     end
