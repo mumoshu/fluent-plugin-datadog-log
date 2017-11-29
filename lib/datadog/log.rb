@@ -1,4 +1,10 @@
 require 'openssl'
+
+require 'semantic_logger'
+
+SemanticLogger.default_level = :warn
+SemanticLogger.add_appender(io: STDOUT, formatter: :json)
+
 require 'net/tcp_client'
 require 'socket'
 require 'time'

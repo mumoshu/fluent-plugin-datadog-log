@@ -259,6 +259,8 @@ module Fluent::Plugin
             end
           end
 
+          @log.debug 'Dumping kubernetes metadata', metadata: kube
+
           if kube.key? 'annotations'
             annotations = kube['annotations']
             created_by_str = annotations['kubernetes.io/created-by']
