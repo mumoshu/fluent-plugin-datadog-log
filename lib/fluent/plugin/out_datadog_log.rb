@@ -337,7 +337,7 @@ module Fluent::Plugin
 
     def init_api_client
       @conn = ::Datadog::Log::Client.new(
-        log_dd_url: @log_dd_uri,
+        log_dd_url: @log_dd_url,
         log_dd_port: @log_dd_port,
         api_key: @api_key,
         hostname: @vm_id,
