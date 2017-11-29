@@ -25,7 +25,7 @@ require_relative 'monitoring'
 module Fluent::Plugin
   # fluentd output plugin for the Datadog Log Intake API
   class DatadogOutput < ::Fluent::Plugin::Output
-    Fluent::Plugin.register_output('datadog', self)
+    Fluent::Plugin.register_output('datadog_log', self)
 
     helpers :compat_parameters, :inject
 
