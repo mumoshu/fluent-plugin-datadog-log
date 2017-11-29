@@ -321,7 +321,7 @@ module Fluent::Plugin
           if entries_count.nil?
             increment_dropped_entries_count(1)
             @log.error 'Not retrying a log message later',
-                       error: error.to_s
+                       error: error.to_s, error_class: error.class
           else
             increment_retried_entries_count(entries_count)
             # RPC cancelled, so retry via re-raising the error.
