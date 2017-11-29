@@ -220,6 +220,10 @@ class DatadogLogOutputTest < Test::Unit::TestCase
       @sent = []
     end
 
+    def retry_on_connection_failure
+      yield
+    end
+
     def write(payload)
       @sent << payload
     end

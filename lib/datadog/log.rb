@@ -96,7 +96,9 @@ module Datadog
             )
           )
         )
-        @conn.write(payload)
+        @conn.retry_on_connection_failure do
+          @conn.write(payload)
+        end
         payload
       end
 
