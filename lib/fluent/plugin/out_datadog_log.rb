@@ -261,9 +261,9 @@ module Fluent::Plugin
 
           @log.debug 'Dumping kubernetes metadata', metadata: kube
 
-          if kube.key? 'annotations'
-            annotations = kube['annotations']
-            created_by_str = annotations['kubernetes.io/created-by']
+          annotations = kube['annotations']
+          unless annotations.nil?
+            created_by_str = annotations['kubernetes_io/created-by']
             unless created_by_str.nil?
               created_by = JSON.parse(created_by_str)
               ref = created_by['reference'] unless created_by.nil?

@@ -135,7 +135,8 @@ class DatadogLogOutputTest < Test::Unit::TestCase
             },
             'annotations' => {
               # rubocop:disable LineLength
-              'kubernetes.io/created-by' => '{"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"Deployment","namespace":"default","name":"myapp","uid":"d67e8857-c2dc-11e7-aed9-066d23381f8c","apiVersion":"extensions","resourceVersion":"289"}}'
+              # kubernetes.io is translated to kubernetes_io by kubernetes metadata filter
+              'kubernetes_io/created-by' => '{"kind":"SerializedReference","apiVersion":"v1","reference":{"kind":"Deployment","namespace":"default","name":"myapp","uid":"d67e8857-c2dc-11e7-aed9-066d23381f8c","apiVersion":"extensions","resourceVersion":"289"}}'
               # rubocop:enable LineLength
             }
           }
