@@ -246,7 +246,7 @@ module Fluent::Plugin
           }
 
           mappings.each do |json_key, tag_key|
-            tags << "#{tag_key}=#{kube[json_key]}" if kube.key? json_key
+            tags << "#{tag_key}:#{kube[json_key]}" if kube.key? json_key
           end
 
           kube_labels = kube['labels']
@@ -255,7 +255,7 @@ module Fluent::Plugin
               k2 = k.dup
               k2.gsub!(/[\,\.]/, '_')
               k2.gsub!(%r{/}, '-')
-              tags << "kube_#{k2}=#{v}"
+              tags << "kube_#{k2}:#{v}"
             end
           end
 
@@ -270,7 +270,7 @@ module Fluent::Plugin
               kind = ref['kind'] unless ref.nil?
               name = ref['name'] unless ref.nil?
               kind = kind.downcase unless kind.nil?
-              tags << "kube_#{kind}=#{name}" if !kind.nil? && !name.nil?
+              tags << "kube_#{kind}:#{name}" if !kind.nil? && !name.nil?
             end
           end
 
@@ -476,7 +476,7 @@ module Fluent::Plugin
       aws_account_id = ec2_metadata['accountId'] if
           ec2_metadata.key?('accountId')
       # #host:i-09fbfed2672d2c6bf
-      %W(host=#{@vm_id} zone=#{@zone} aws_account_id=#{aws_account_id})
+      %W(host:#{@vm_id} zone:#{@zone} aws_account_id:#{aws_account_id})
         .concat @tags
     end
 
