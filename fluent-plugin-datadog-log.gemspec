@@ -8,7 +8,7 @@ eos
   gem.homepage      = \
     'https://github.com/mumoshu/fluent-plugin-datadog-log'
   gem.license       = 'Apache-2.0'
-  gem.version       = '0.1.0.rc11'
+  gem.version       = '0.1.0.rc12'
   gem.authors       = ['Yusuke KUOKA']
   gem.email         = ['ykuoka@gmail.com']
   gem.required_ruby_version = Gem::Requirement.new('>= 2.0')
