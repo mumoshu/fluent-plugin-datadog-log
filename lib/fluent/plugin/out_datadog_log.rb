@@ -18,8 +18,8 @@ require 'socket'
 require 'time'
 require 'yaml'
 require 'fluent/plugin/output'
-require 'datadog/log'
 
+require_relative 'datadog_log'
 require_relative 'monitoring'
 
 module Fluent::Plugin

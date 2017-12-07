@@ -9,7 +9,10 @@ require 'net/tcp_client'
 require 'socket'
 require 'time'
 
+# Datadog provides various helpers to programatically access Datadog services
 module Datadog
+  # Log provides various helpers and classes to support programatically
+  # accessing Datadog Log Management
   module Log
     TRUNCATED_MSG = '...TRUNCATED...'
 
@@ -70,10 +73,17 @@ module Datadog
       "#{api_key_str} #{extra_content} #{msg}\n"
     end
 
+    # Client supports building/sending payloads to Datadog Log Management
     class Client
       include ::Datadog::Log
 
-      def initialize(log_dd_url: 'intake.logs.datadoghq.com', log_dd_port: 10516, api_key:, hostname:, skip_ssl_validation: false)
+      def initialize(
+        log_dd_url: 'intake.logs.datadoghq.com',
+        log_dd_port: 10516,
+        api_key:,
+        hostname:,
+        skip_ssl_validation: false
+      )
         @log_dd_url = log_dd_url
         @log_dd_port = log_dd_port
         @api_key = api_key
@@ -83,10 +93,22 @@ module Datadog
         init_api_client
       end
 
-      def send_payload(logset: 'main', msg:, datetime: nil, service:, source:, source_category:, tags:)
+      # rubocop:disable Metrics/ParameterLists
+      def send_payload(
+        logset: 'main',
+        msg:,
+        datetime: nil,
+        service:,
+        source:,
+        source_category:,
+        tags:
+      )
+        # rubocop:enable Metrics/ParameterLists
+
         datetime = DateTime.now if datetime.nil?
 
-        # new_offset(0) is required. otherwise datadog will silently throws away the log..
+        # new_offset(0) is required.
+        # otherwise datadog will silently throws away the log..
         timestamp_str = datetime.new_offset(0).rfc3339(6)
         payload = create_payload(
           api_key_str: build_api_key_str(api_key: @api_key, logset: logset),
