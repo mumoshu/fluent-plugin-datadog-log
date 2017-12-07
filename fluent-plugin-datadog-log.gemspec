@@ -8,7 +8,7 @@ eos
   gem.homepage      = \
     'https://github.com/mumoshu/fluent-plugin-datadog-log'
   gem.license       = 'Apache-2.0'
-  gem.version       = '0.1.0.rc10'
+  gem.version       = '0.1.0.rc11'
   gem.authors       = ['Yusuke KUOKA']
   gem.email         = ['ykuoka@gmail.com']
   gem.required_ruby_version = Gem::Requirement.new('>= 2.0')
@@ -17,7 +17,7 @@ eos
   gem.test_files    = gem.files.grep(/^(test)/)
   gem.require_paths = ['lib']
 
-  gem.add_runtime_dependency 'fluentd', '~> 0.14'
+  gem.add_runtime_dependency 'fluentd', '~> 1.0.0'
   # gem.add_runtime_dependency 'datadog-log-api-client', '~> 0.1'
   gem.add_runtime_dependency 'json', '~> 1.8'
 
