@@ -2,7 +2,7 @@ require 'openssl'
 
 require 'semantic_logger'
 
-SemanticLogger.default_level = :warn
+SemanticLogger.default_level = :info
 SemanticLogger.add_appender(io: STDOUT, formatter: :json)
 
 require 'net/tcp_client'
