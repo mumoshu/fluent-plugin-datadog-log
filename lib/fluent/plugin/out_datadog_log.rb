@@ -486,14 +486,14 @@ module Fluent::Plugin
         unless event.respond_to? :last
           @log.warn 'Dropping a malformed event: ' \
                     "'#{event.inspect}'. " \
-                    'A log record should be an array.'
+                    'An event should be an array.'
           next
         end
         record = event.last
         unless record.is_a?(Hash)
           @log.warn 'Dropping log entries with malformed record: ' \
                     "'#{record.inspect}'. " \
-                    'A log record should be in JSON format.'
+                    "A record should be a hash but was a #{record.class}."
           next
         end
         tag = record.first
