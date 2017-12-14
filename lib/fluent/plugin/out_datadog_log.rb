@@ -483,6 +483,12 @@ module Fluent::Plugin
     # Filter out invalid non-Hash entries.
     def each_valid_record(chunk)
       chunk.msgpack_each do |event|
+        unless event.respond_to? :last
+          @log.warn 'Dropping a malformed event: ' \
+                    "'#{event.inspect}'. " \
+                    'A log record should be an array.'
+          next
+        end
         record = event.last
         unless record.is_a?(Hash)
           @log.warn 'Dropping log entries with malformed record: ' \
