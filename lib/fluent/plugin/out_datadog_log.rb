@@ -232,7 +232,10 @@ module Fluent::Plugin
         begin
           msg = nil
           %w(log message msg).each do |field|
-            msg = record[field] if record.key?(field)
+            if record.key?(field)
+              msg = record[field]
+              break
+            end
           end
 
           tags = []
