@@ -9,6 +9,14 @@ require 'net/tcp_client'
 require 'socket'
 require 'time'
 
+# Never give up on a write timeout/Fix for:
+#  Not retrying a log message later error=\"Timed out after 60.0 seconds trying to write to intake.logs.datadoghq.com[52.206.154.220]:10516\" error_class=Net::TCPClient::WriteTimeout
+Net::TCPClient.reconnect_on_errors << Net::TCPClient::WriteTimeout
+
+# Never give up on a corrupted SSL connection/Fix for:
+#  Not retrying a log message later error="SSL_write: bad write retry" error_class=OpenSSL::SSL::SSLError
+Net::TCPClient.reconnect_on_errors << OpenSSL::SSL::SSLError
+
 # Datadog provides various helpers to programatically access Datadog services
 module Datadog
   # Log provides various helpers and classes to support programatically
